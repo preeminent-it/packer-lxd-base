@@ -1,0 +1,16 @@
+[Unit]
+Description=Vault Agent
+
+[Service]
+TimeoutStartSec=0
+Restart=always
+WatchdogSec=86400
+RemainAfterExit=yes
+RestartSec=5
+SuccessExitStatus=0
+ExecStartPre=vault read -format=json auth/approle/role/infra/role-id | jq -r '.data.role_id' >/etc/vault/.role_id
+ExecStartPre=vault write -f -format=json auth/approle/role/infra/secret-id | jq -r '.data.secret_id' >/etc/vault/.secret_id
+ExecStart=/usr/local/bin/vault agent -config=/etc/vault/agent.hcl
+
+[Install]
+WantedBy=multi-user.target
