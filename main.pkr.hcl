@@ -20,11 +20,20 @@ variable "node_exporter_version" {
 }
 
 variable "packages" {
-  type    = list(string)
+  type = list(string)
   default = [
     "curl",
     "unzip"
   ]
+}
+
+variable "source" {
+  type = map(string)
+  default = {
+    description = "Base image - Ubuntu 20.04"
+    image       = "ubuntu:focal"
+    name        = "base-ubuntu-focal"
+  }
 }
 
 variable "vault_home" {
@@ -47,17 +56,17 @@ locals {
 }
 
 // Image
-source "lxd" "base-ubuntu-focal" {
-  image        = "images:ubuntu/focal"
-  output_image = "base-ubuntu-focal"
+source "lxd" "main" {
+  image        = "${var.source.image}"
+  output_image = "${var.source.name}"
   publish_properties = {
-    description = "Base - Ubuntu Focal"
+    description = "${var.source.description}"
   }
 }
 
 // Build
 build {
-  sources = ["source.lxd.base-ubuntu-focal"]
+  sources = ["source.lxd.main"]
 
   // Update and install packages
   provisioner "shell" {
