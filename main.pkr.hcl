@@ -23,6 +23,7 @@ variable "packages" {
   type = list(string)
   default = [
     "curl",
+    "jq",
     "unzip"
   ]
 }
@@ -34,6 +35,16 @@ variable "source" {
     image       = "ubuntu:focal"
     name        = "base-ubuntu-focal"
   }
+}
+
+variable "vault_approle_role" {
+  type    = string
+  default = "infra"
+}
+
+variable "vault_pki_mount" {
+  type    = string
+  default = "pki-intermediate-ca"
 }
 
 variable "vault_home" {
@@ -182,6 +193,20 @@ build {
     inline = [
       "chown -R ${var.vault_user} /etc/vault ${var.vault_home}",
       "systemctl enable vault-agent"
+    ]
+  }
+
+  // Add CA certificates and auth for Vault
+  provisioner "shell" {
+    environment_vars = [
+      "VAULT_ADDR=$VAULT_ADDR",
+      "VAULT_SKIP_VERIFY=$VAULT_SKIP_VERIFY",
+      "VAULT_TOKEN=$VAULT_TOKEN"
+    ]
+    inline = [
+      "curl -ks $VAULT_ADDR/v1/${var.vault_pki_mount}/ca/pem >/usr/local/share/ca-certificates/vault-int-ca.pem && update-ca-certificates",
+      "vault read -format=json auth/approle/role/${var.vault_approle_role}/role-id | jq -r '.data.role_id' >/etc/vault/.role_id",
+      "vault write -f -format=json auth/approle/role/${var.vault_approle_role}/secret-id | jq -r '.data.secret_id' >/etc/vault/.secret_id"
     ]
   }
 }
