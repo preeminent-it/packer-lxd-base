@@ -1,0 +1,3 @@
+{{ with secret ( printf "%s/issue/%s" (env "VAULT_PKI_PATH") (env "VAULT_PKI_ROLE") ) ( printf "common_name=%s" (env "HOSTNAME") ) ( printf "alt_names=%s" (env "VAULT_PKI_SANS") ) -}}
+  {{ .Data.private_key -}}
+{{ end }}

@@ -2,8 +2,8 @@ pid_file        = "/var/run/vault-agent.pid"
 exit_after_auth = false
 
 vault {
-  address = "https://vault:8200"
-  ca_path = "/etc/ssl/vault"
+  address = "https://vault.service.dc1.consul:8200"
+  ca_path = "/etc/ssl/certs"
 }
 
 auto_auth {
@@ -22,3 +22,15 @@ auto_auth {
     }
   }
 }
+
+template {
+  source      = "/etc/vault/templates/vault_key.ctmpl"
+  destination = "/etc/consul/tls/client.key"
+}
+
+template {
+  source      = "/etc/vault/templates/vault_certificate.ctmpl"
+  destination = "/etc/consul/tls/client.crt"
+}
+
+

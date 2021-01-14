@@ -109,14 +109,6 @@ build {
     ]
   }
 
-  // Create self-signed certificate
-  provisioner "shell" {
-    inline = [
-      "openssl req -x509 -newkey rsa:4096 -sha256 -days 3650 -nodes -keyout /etc/consul/tls/cli.key -out /etc/consul/tls/cli.crt -subj \"/CN=consul-cli\"",
-      "openssl req -x509 -newkey rsa:4096 -sha256 -days 3650 -nodes -keyout /etc/consul/tls/client.key -out /etc/consul/tls/client.crt -subj \"/CN=consul-client\""
-    ]
-  }
-
   // Install Consul
   provisioner "shell" {
     inline = [
@@ -128,8 +120,13 @@ build {
 
   // Add Consul config
   provisioner "file" {
-    source      = "files/etc/consul/consul.hcl"
-    destination = "/etc/consul/consul.hcl"
+    source      = "files/etc/consul"
+    destination = "/etc/consul"
+  }
+
+  provisioner "file" {
+    source      = "files/etc/profile.d/consul.sh"
+    destination = "/etc/profile.d/consul.sh"
   }
 
   // Add Consul service
@@ -160,13 +157,6 @@ build {
     ]
   }
 
-  // Create self-signed certificate
-  provisioner "shell" {
-    inline = [
-      "openssl req -x509 -newkey rsa:4096 -sha256 -days 3650 -nodes -keyout /etc/vault/tls/server.key -out /etc/vault/tls/server.crt -subj \"/CN=vault\""
-    ]
-  }
-
   // Install Vault
   provisioner "shell" {
     inline = [
@@ -178,8 +168,8 @@ build {
 
   // Add Vault config
   provisioner "file" {
-    source      = "files/etc/vault/agent.hcl"
-    destination = "/etc/vault/agent.hcl"
+    source      = "files/etc/vault"
+    destination = "/etc/vault"
   }
 
   // Add Vault service
@@ -204,7 +194,7 @@ build {
       "VAULT_TOKEN=$VAULT_TOKEN"
     ]
     inline = [
-      "curl -ks $VAULT_ADDR/v1/${var.vault_pki_mount}/ca/pem >/usr/local/share/ca-certificates/vault-int-ca.pem && update-ca-certificates",
+      "curl -ks $VAULT_ADDR/v1/${var.vault_pki_mount}/ca/pem | tee /etc/ssl/vault-ca.pem /usr/local/share/ca-certificates/vault-ca.pem && update-ca-certificates",
       "vault read -format=json auth/approle/role/${var.vault_approle_role}/role-id | jq -r '.data.role_id' >/etc/vault/.role_id",
       "vault write -f -format=json auth/approle/role/${var.vault_approle_role}/secret-id | jq -r '.data.secret_id' >/etc/vault/.secret_id"
     ]

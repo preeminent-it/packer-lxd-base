@@ -19,7 +19,7 @@ client_addr            = "0.0.0.0"
 datacenter             = "dc1"
 data_dir               = "/opt/consul"
 encrypt                = "qDOPBEr+/oUVeOFQOnVypxwDaHzLrD+lvjo5vCEBbZ0="
-ca_file                = "/etc/consul/tls/ca.crt"
+ca_file                = "/etc/ssl/vault-ca.pem"
 cert_file              = "/etc/consul/tls/client.crt"
 key_file               = "/etc/consul/tls/client.key"
 verify_incoming        = true
