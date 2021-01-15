@@ -16,6 +16,7 @@ ports = {
 server                 = false
 bind_addr              = "{{ GetInterfaceIP \"eth0\" }}"
 client_addr            = "0.0.0.0"
+retry_join             = ["consul.lxd"]
 datacenter             = "dc1"
 data_dir               = "/opt/consul"
 encrypt                = "qDOPBEr+/oUVeOFQOnVypxwDaHzLrD+lvjo5vCEBbZ0="

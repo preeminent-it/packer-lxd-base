@@ -153,7 +153,7 @@ build {
     inline = [
       "curl -sO https://releases.hashicorp.com/consul-template/${var.consul_template_version}/consul-template_${var.consul_template_version}_linux_amd64.zip &&",
       "unzip consul-template_${var.consul_template_version}_linux_amd64.zip consul-template -d /usr/local/bin/ &&",
-      "rm consul-template_${var.consul_version}_linux_amd64.zip"
+      "rm consul-template_${var.consul_template_version}_linux_amd64.zip"
     ]
   }
 

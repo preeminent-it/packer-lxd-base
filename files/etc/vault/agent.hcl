@@ -2,7 +2,7 @@ pid_file        = "/var/run/vault-agent.pid"
 exit_after_auth = false
 
 vault {
-  address = "https://vault.service.dc1.consul:8200"
+  address = "https://vault.lxd:8200"
   ca_path = "/etc/ssl/certs"
 }
 
