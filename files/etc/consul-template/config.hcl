@@ -5,7 +5,7 @@ log_level     = "info"
 pid_file      = "/var/run/consul-template.pid"
 
 vault {
-  address                = "vault.lxd"
+  address                = "https://vault.lxd:8200"
   vault_agent_token_file = "/root/.vault-agent"
   renew_token            = true
 }

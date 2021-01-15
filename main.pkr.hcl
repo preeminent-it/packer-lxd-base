@@ -123,6 +123,13 @@ build {
     destination = "/etc/systemd/system/node_exporter.service"
   }
 
+  // Enable the service
+  provisioner "shell" {
+    inline = [
+      "systemctl enable node_exporter"
+    ]
+  }
+
   // Create directories for Consul
   provisioner "shell" {
     inline = [
@@ -149,7 +156,7 @@ build {
   // Add Consul config
   provisioner "file" {
     source      = "files/etc/consul"
-    destination = "/etc/consul"
+    destination = "/etc/"
   }
 
   provisioner "file" {
@@ -166,7 +173,7 @@ build {
   // Set file ownership and enable the service
   provisioner "shell" {
     inline = [
-      "chown -R ${var.consul_user} /etc/consul ${var.consul_home}",
+      "chown -R ${var.consul_user}: /etc/consul ${var.consul_home}",
       "systemctl enable consul"
     ]
   }
@@ -183,7 +190,25 @@ build {
   // Add Consul Template config
   provisioner "file" {
     source      = "files/etc/consul-template"
-    destination = "/etc/consul-template"
+    destination = "/etc/"
+  }
+
+  provisioner "file" {
+    source      = "files/etc/default/consul-template"
+    destination = "/etc/default/consul-template"
+  }
+
+  // Add Consul Template service
+  provisioner "file" {
+    source      = "files/etc/systemd/system/consul-template.service"
+    destination = "/etc/systemd/system/consul-template.service"
+  }
+
+  // Enable the service
+  provisioner "shell" {
+    inline = [
+      "systemctl enable consul-template"
+    ]
   }
 
   // Create directories for Vault
@@ -213,20 +238,20 @@ build {
   // Add Vault config
   provisioner "file" {
     source      = "files/etc/vault"
-    destination = "/etc/vault"
+    destination = "/etc/"
   }
 
   // Add Vault service
   provisioner "file" {
-    source      = "files/etc/systemd/system/vault-agent.service"
-    destination = "/etc/systemd/system/vault-agent.service"
+    source      = "files/etc/systemd/system/vault.service"
+    destination = "/etc/systemd/system/vault.service"
   }
 
   // Set file ownership and enable the service
   provisioner "shell" {
     inline = [
-      "chown -R ${var.vault_user} /etc/vault ${var.vault_home}",
-      "systemctl enable vault-agent"
+      "chown -R ${var.vault_user}: /etc/vault ${var.vault_home}",
+      "systemctl enable vault"
     ]
   }
 
