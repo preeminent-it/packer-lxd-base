@@ -22,15 +22,3 @@ auto_auth {
     }
   }
 }
-
-template {
-  source      = "/etc/vault/templates/vault_key.ctmpl"
-  destination = "/etc/consul/tls/client.key"
-}
-
-template {
-  source      = "/etc/vault/templates/vault_certificate.ctmpl"
-  destination = "/etc/consul/tls/client.crt"
-}
-
-

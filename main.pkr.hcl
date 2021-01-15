@@ -14,6 +14,11 @@ variable "consul_version" {
   default = "1.9.1"
 }
 
+variable "consul_template_version" {
+  type    = string
+  default = "0.25.1"
+}
+
 variable "node_exporter_version" {
   type    = string
   default = "1.0.1"
@@ -143,6 +148,21 @@ build {
     ]
   }
 
+  // Install Consul Template
+  provisioner "shell" {
+    inline = [
+      "curl -sO https://releases.hashicorp.com/consul-template/${var.consul_template_version}/consul-template_${var.consul_template_version}_linux_amd64.zip &&",
+      "unzip consul-template_${var.consul_template_version}_linux_amd64.zip consul-template -d /usr/local/bin/ &&",
+      "rm consul-template_${var.consul_version}_linux_amd64.zip"
+    ]
+  }
+
+  // Add Consul Template config
+  provisioner "file" {
+    source      = "files/etc/consul-template"
+    destination = "/etc/consul-template"
+  }
+
   // Create directories for Vault
   provisioner "shell" {
     inline = [
@@ -162,6 +182,7 @@ build {
     inline = [
       "curl -sO https://releases.hashicorp.com/vault/${var.vault_version}/vault_${var.vault_version}_linux_amd64.zip &&",
       "unzip vault_${var.vault_version}_linux_amd64.zip vault -d /usr/local/bin/ &&",
+      "setcap cap_ipc_lock=+ep /usr/local/bin/vault &&",
       "rm vault_${var.vault_version}_linux_amd64.zip"
     ]
   }
