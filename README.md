@@ -1,19 +1,15 @@
 # Packer LXD - Base
 
 ## Build
+
 ```bash
 packer build .
 ```
 
 ## Requirements
+
 * packer 1.6.6 (or earlier supporting hcl2)
 * a working lxd installation
-
-No requirements.
-
-## Providers
-
-No provider.
 
 ## Inputs
 
