@@ -19,6 +19,16 @@ variable "consul_template_version" {
   default = "0.25.1"
 }
 
+variable "node_exporter_home" {
+  type    = string
+  default = "/opt/node_exporter"
+}
+
+variable "node_exporter_user" {
+  type    = string
+  default = "node_exporter"
+}
+
 variable "node_exporter_version" {
   type    = string
   default = "1.0.1"
@@ -92,12 +102,25 @@ build {
     ]
   }
 
+  // Create Node Exporter system user
+  provisioner "shell" {
+    inline = [
+      "useradd --system --home ${var.node_exporter_home} --shell /bin/false ${var.node_exporter_user}"
+    ]
+  }
+
   // Install node_exporter
   provisioner "shell" {
     inline = [
       "curl -sLo - https://github.com/prometheus/node_exporter/releases/download/v${var.node_exporter_version}/node_exporter-${var.node_exporter_version}.linux-amd64.tar.gz | \n",
       "tar -zxf - --strip-component=1 -C /usr/local/bin/ node_exporter-${var.node_exporter_version}.linux-amd64/node_exporter"
     ]
+  }
+
+  // Add Node Exporter service
+  provisioner "file" {
+    source      = "files/etc/systemd/system/node_exporter.service"
+    destination = "/etc/systemd/system/node_exporter.service"
   }
 
   // Create directories for Consul

@@ -1,4 +1,4 @@
-# Packer LXD - Hashicorp Consul
+# Packer LXD - Base
 
 ### Requirements
 * packer 1.6.6 (or earlier supporting hcl2)
