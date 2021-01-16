@@ -1,4 +1,3 @@
-// Variables
 variable "consul_home" {
   type    = string
   default = "/opt/consul"

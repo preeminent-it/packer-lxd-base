@@ -1,2 +1,4 @@
-OPTIONS='-template "/etc/consul-template/templates/vault_key.ctmpl:/etc/consul/tls/client.key"
+OPTIONS='-template "/etc/consul-template/templates/vault_key.ctmpl:/etc/consul/tls/cli.key"
+         -template "/etc/consul-template/templates/vault_certificate.ctmpl:/etc/consul/tls/cli.crt"
+         -template "/etc/consul-template/templates/vault_key.ctmpl:/etc/consul/tls/client.key"
          -template "/etc/consul-template/templates/vault_certificate.ctmpl:/etc/consul/tls/client.crt"'
