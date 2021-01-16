@@ -70,12 +70,6 @@ build {
     ]
   }
 
-  // Add Consul config
-  provisioner "file" {
-    source      = "files/etc/consul"
-    destination = "/etc/"
-  }
-
   provisioner "file" {
     source      = "files/etc/profile.d/consul.sh"
     destination = "/etc/profile.d/consul.sh"
