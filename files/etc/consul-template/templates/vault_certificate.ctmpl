@@ -1,7 +1,4 @@
 {{ with secret ( printf "%s/issue/%s" (env "VAULT_PKI_PATH") (env "VAULT_PKI_ROLE") ) ( printf "common_name=%s" (env "HOSTNAME") ) ( printf "alt_names=%s" (env "VAULT_PKI_SANS") ) -}}
 {{ .Data.certificate }}
 {{ .Data.issuing_ca }}
-{{ with secret "%s" (env "VAULT_PKI_CA_PATH") -}}
-{{ .Data.certificate }}
-{{ end -}}
 {{ end -}}

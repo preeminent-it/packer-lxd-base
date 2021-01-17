@@ -104,24 +104,6 @@ build {
     destination = "/etc/"
   }
 
-  provisioner "file" {
-    source      = "files/etc/default/consul-template"
-    destination = "/etc/default/consul-template"
-  }
-
-  // Add Consul Template service
-  provisioner "file" {
-    source      = "files/etc/systemd/system/consul-template.service"
-    destination = "/etc/systemd/system/consul-template.service"
-  }
-
-  // Enable the service
-  provisioner "shell" {
-    inline = [
-      "systemctl enable consul-template"
-    ]
-  }
-
   // Create directories for Vault
   provisioner "shell" {
     inline = [
@@ -174,7 +156,7 @@ build {
       "VAULT_TOKEN=$VAULT_TOKEN"
     ]
     inline = [
-      "curl -ks $VAULT_ADDR/v1/${var.vault_pki_mount}/ca/pem | tee /etc/ssl/vault-ca.pem /usr/local/share/ca-certificates/vault-ca.pem && update-ca-certificates",
+      "curl -ks $VAULT_ADDR/v1/${var.vault_pki_mount}/ca/pem | tee /etc/ssl/vault-ca.crt /usr/local/share/ca-certificates/vault-ca.crt && update-ca-certificates",
       "vault read -format=json auth/approle/role/${var.vault_approle_role}/role-id | jq -r '.data.role_id' >/etc/vault/.role_id",
       "vault write -f -format=json auth/approle/role/${var.vault_approle_role}/secret-id | jq -r '.data.secret_id' >/etc/vault/.secret_id"
     ]
