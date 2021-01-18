@@ -47,6 +47,41 @@ build {
     ]
   }
 
+  // Create Promtail system user
+  provisioner "shell" {
+    inline = [
+      "useradd --system --home ${var.promtail_home} --shell /bin/false ${var.promtail_user}"
+    ]
+  }
+
+  // Install promtail
+  provisioner "shell" {
+    inline = [
+      "curl -sLO https://github.com/grafana/loki/releases/download/v${var.promtail_version}/promtail-linux-amd64.zip &&",
+      "unzip promtail-linux-amd64.zip promtail-linux-amd64 && mv promtail-linux-amd64 /usr/local/bin/promtail &&",
+      "rm promtail-linux-amd64.zip"
+    ]
+  }
+
+  // Add Promtail config
+  provisioner "file" {
+    source      = "files/etc/promtail"
+    destination = "/etc/"
+  }
+
+  // Add Promtail service
+  provisioner "file" {
+    source      = "files/etc/systemd/system/promtail.service"
+    destination = "/etc/systemd/system/promtail.service"
+  }
+
+  // Enable the service
+  provisioner "shell" {
+    inline = [
+      "systemctl enable promtail"
+    ]
+  }
+
   // Create directories for Consul
   provisioner "shell" {
     inline = [

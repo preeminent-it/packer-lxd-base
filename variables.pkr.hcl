@@ -42,6 +42,21 @@ variable "packages" {
   ]
 }
 
+variable "promtail_home" {
+  type    = string
+  default = "/opt/promtail"
+}
+
+variable "promtail_user" {
+  type    = string
+  default = "promtail"
+}
+
+variable "promtail_version" {
+  type    = string
+  default = "2.1.0"
+}
+
 variable "source" {
   type = map(string)
   default = {
