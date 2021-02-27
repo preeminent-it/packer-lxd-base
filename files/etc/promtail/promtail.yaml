@@ -6,7 +6,7 @@ positions:
   filename: /tmp/positions.yaml
 
 clients:
-  - url: https://loki.lxd:3100/api/v1/push
+  - url: https://loki.lxd/loki/api/v1/push
 
 scrape_configs:
 - job_name: system

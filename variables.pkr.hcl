@@ -36,6 +36,7 @@ variable "node_exporter_version" {
 variable "packages" {
   type = list(string)
   default = [
+    "acl",
     "curl",
     "jq",
     "unzip"

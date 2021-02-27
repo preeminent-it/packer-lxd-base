@@ -75,6 +75,13 @@ build {
     destination = "/etc/systemd/system/promtail.service"
   }
 
+  // Allow Promtail to read /var/log
+  provisioner "shell" {
+    inline = [
+      "setfacl -dRm d:g:${var.promtail_user}:rx,g:${var.promtail_user}:rx /var/log"
+    ]
+  }
+
   // Enable the service
   provisioner "shell" {
     inline = [
