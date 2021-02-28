@@ -78,7 +78,7 @@ build {
   // Allow Promtail to read /var/log
   provisioner "shell" {
     inline = [
-      "setfacl -dRm d:g:${var.promtail_user}:rx,g:${var.promtail_user}:rx /var/log"
+      "setfacl -dRm g:${var.promtail_user}:rX,g:${var.promtail_user}:rX /var/log"
     ]
   }
 
